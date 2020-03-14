@@ -24,16 +24,8 @@ app.get("/notes", function (req, res) {
 
 app.get("/api/notes", function (req, res) {
     fs.readFile(__dirname+"/db/db.json", "utf-8", function read(err, data) {
-        if (err) {
-            throw err;
-        }
-        const content = data;
-        processFile(content);
+        res.json(data);
     });
-    function processFile(content) {
-        console.log(content);
-        res.json(content);
-    }
 });
 
 app.get("/api/test", (req, res) => res.json({ answer: 42 }));
