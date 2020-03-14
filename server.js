@@ -12,22 +12,32 @@ var PORT = 3000;
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
+    res.sendFile(path.join(__dirname + "/public", "/public/index.html"));
 });
 
 app.get("/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "notes.html"));
+    res.sendFile(path.join(__dirname + "/public", "notes.html"));
 });
 
 app.get("/api/notes", function (req, res) {
-    res.sendFile(path.join(__dirname, "index.html"));
-    fs.readFileSync(filepath, encoding);
-    return JSON.parse(file);
+    fs.readFile(__dirname+"/db/db.json", "utf-8", function read(err, data) {
+        if (err) {
+            throw err;
+        }
+        const content = data;
+        processFile(content);
+    });
+    function processFile(content) {
+        console.log(content);
+        res.json(content);
+    }
 });
+
+app.get("/api/test", (req, res) => res.json({ answer: 42 }));
 
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });
-
