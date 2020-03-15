@@ -14,6 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
+//global vars
+let notes = [];
+
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/public", "/public/index.html"));
 });
@@ -23,12 +26,30 @@ app.get("/notes", function (req, res) {
 });
 
 app.get("/api/notes", function (req, res) {
-    fs.readFile(__dirname+"/db/db.json", "utf-8", function read(err, data) {
+    fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
         res.json(data);
+        //return res.json(data);
     });
 });
 
-app.get("/api/test", (req, res) => res.json({ answer: 42 }));
+app.post("/api/notes", function (req, res) {
+    var newNote = req.body;
+
+    notes.push(newNote);
+
+    res.json(newNote);
+
+    var jsonObj = JSON.parse(JSON.stringify(newNote));
+
+    console.log(jsonObj);
+
+    fs.appendFile(__dirname+"/db/db.json", newNote, 'utf8', function (err) {
+        if (err) {
+            console.log("An error occured while writing JSON Object to File.");
+            return console.log(err);
+        }
+    });
+});
 
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
