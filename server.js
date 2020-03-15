@@ -39,11 +39,9 @@ app.post("/api/notes", function (req, res) {
 
     res.json(newNote);
 
-    var jsonObj = JSON.parse(JSON.stringify(newNote));
+    var test = JSON.stringify(newNote);
 
-    console.log(jsonObj);
-
-    fs.appendFile(__dirname+"/db/db.json", newNote, 'utf8', function (err) {
+    fs.appendFile(__dirname+"/db/db.json", test, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
