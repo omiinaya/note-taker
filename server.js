@@ -14,9 +14,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
-//global vars
+// global variables
 let allNotes = [];
 
+// http routes
 app.get("/", function (req, res) {
     res.sendFile(path.join(__dirname + "/public", "index.html"));
 });
@@ -31,6 +32,7 @@ app.get("/api/notes", function (req, res) {
     });
 });
 
+//api rotues
 app.post("/api/notes", function (req, res) {
     var newNote = req.body;
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
@@ -42,6 +44,19 @@ app.post("/api/notes", function (req, res) {
         });
     });
     res.json(newNote);
+});
+
+app.get("/api/notes/:id", function (req, res) {
+    var chosen = req.params.id;
+    fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
+        allNotes = JSON.parse(data);
+        for (var i = 0; i < allNotes.length; i++) {
+            if (chosen == allNotes[i].id) {
+                return res.json(allNotes[i]);
+            }
+        }
+        return res.json(false);
+    });
 });
 
 app.delete("/api/notes/:id", function (req, res) {
@@ -56,6 +71,7 @@ app.delete("/api/notes/:id", function (req, res) {
     res.json(id);
 });
 
+// listener
 app.listen(PORT, function () {
     console.log("App listening on PORT " + PORT);
 });
