@@ -36,6 +36,8 @@ app.post("/api/notes", function (req, res) {
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
         allNotes = JSON.parse(data); //receives all notes.
         allNotes.push(newNote);
+        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(allNotes), function read(err, data) {
+        });
     });
 });
 
