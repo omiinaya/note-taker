@@ -30,13 +30,25 @@ app.get("/api/notes", function (req, res) {
         res.json(JSON.parse(data));
     });
 });
-        
+
 app.post("/api/notes", function (req, res) {
     var newNote = req.body;
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
-        allNotes = JSON.parse(data); //receives all notes.
-        allNotes.push(newNote);
+        allNotes = JSON.parse(data); //receives all notes currently in db.json
+        allNotes.push(newNote); //pushes new note to the list of notes received
+        fs.writeFile(__dirname + "/db/db.json", JSON.stringify(allNotes), function read(err, data) { //writes the new list of notes to the db.json file.
+            console.log("Updated db.json");
+        });
+    });
+});
+
+app.delete("/api/notes/:id", function (req, res) {
+    var id = req.params.id;
+    fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
+        allNotes = JSON.parse(data);
+        allNotes.splice(id, 1);
         fs.writeFile(__dirname + "/db/db.json", JSON.stringify(allNotes), function read(err, data) {
+            console.log("Updated db.json");
         });
     });
 });
