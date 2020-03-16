@@ -35,11 +35,13 @@ app.post("/api/notes", function (req, res) {
     var newNote = req.body;
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
         allNotes = JSON.parse(data); //receives all notes currently in db.json
+        req.body.id = allNotes.length;
         allNotes.push(newNote); //pushes new note to the list of notes received
         fs.writeFile(__dirname + "/db/db.json", JSON.stringify(allNotes), function read(err, data) { //writes the new list of notes to the db.json file.
             console.log("Updated db.json");
         });
     });
+    res.json(newNote);
 });
 
 app.delete("/api/notes/:id", function (req, res) {
@@ -51,6 +53,7 @@ app.delete("/api/notes/:id", function (req, res) {
             console.log("Updated db.json");
         });
     });
+    res.json(id);
 });
 
 app.listen(PORT, function () {
