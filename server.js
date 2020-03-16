@@ -15,10 +15,10 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
 //global vars
-let notes = [];
+let allNotes = [];
 
 app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname + "/public", "/public/index.html"));
+    res.sendFile(path.join(__dirname + "/public", "index.html"));
 });
 
 app.get("/notes", function (req, res) {
@@ -27,25 +27,17 @@ app.get("/notes", function (req, res) {
 
 app.get("/api/notes", function (req, res) {
     fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
-        res.json(data);
-        //return res.json(data);
+        res.json(JSON.parse(data));
     });
 });
-
+        
 app.post("/api/notes", function (req, res) {
     var newNote = req.body;
-
-    notes.push(newNote);
-
-    res.json(newNote);
-
-    var test = JSON.stringify(newNote);
-
-    fs.appendFile(__dirname+"/db/db.json", test, 'utf8', function (err) {
-        if (err) {
-            console.log("An error occured while writing JSON Object to File.");
-            return console.log(err);
-        }
+    fs.readFile(__dirname + "/db/db.json", "utf-8", function read(err, data) {
+        allNotes = JSON.parse(data); //receives all notes.
+        allNotes.push(newNote);
+        
+        
     });
 });
 

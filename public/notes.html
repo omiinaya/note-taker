@@ -43,8 +43,8 @@
     $(".save-note").on("click", function (event) {
       event.preventDefault();
       var newNote = {
-        title: $(".note-title").val().trim(),
-        text: $(".note-textarea").val().trim(),
+        title: $(".note-title").val(),
+        text: $(".note-textarea").val()
       };
       $.post("/api/notes", newNote)
         .then(function (data) {
